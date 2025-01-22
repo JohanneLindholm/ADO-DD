@@ -3,78 +3,73 @@ const backendUrl = "https://DecisionLab.eu.pythonanywhere.com/compute-next-desig
 // Function to fetch the next design from the Python backend
 async function fetchNextDesign(response) {
     try {
-        console.log("Fetching next design with response:", response); // Debugging
         const res = await fetch(backendUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ response }), // Send participant's response to backend
+            body: JSON.stringify({ response }),
         });
 
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`); // Handle non-200 responses
-        }
-
-        const data = await res.json(); // Parse the JSON response
-        console.log("Fetched design data:", data); // Debugging
+        const data = await res.json();
         if (data.message === "Task completed.") {
             console.log("Task completed.");
-            return null; // Signal to stop further trials
+            return null;
         }
-        return data.design; // Return the design for the next trial
+        return data.design;
     } catch (error) {
-        console.error("Error fetching next design:", error); // Log any errors
-        return null; // Handle errors gracefully
+        console.error("Error fetching next design:", error);
+        return null;
     }
 }
 
+// Start the experiment
 async function startExperiment() {
+    // Initialize jsPsych instance
+    const jsPsych = initJsPsych({
+        on_finish: () => {
+            console.log("Experiment completed");
+        },
+    });
+
+    // Define timeline
     const timeline = [];
 
     // Instructions
     timeline.push({
-        type: "html-keyboard-response",
-        stimulus: "Welcome to the experiment. Press any key to begin.",
+        type: jsPsychInstructions,
+        pages: [
+            "Welcome to the experiment. Press 'Next' to begin.",
+            "You will choose between smaller-sooner and larger-later options.",
+        ],
+        show_clickable_nav: true,
     });
 
     // Main task: Iterative trial logic
-    let response = 0; // Initial response
+    let response = 0;
     for (let i = 0; i < 20; i++) {
-        const design = await fetchNextDesign(response); // Fetch design from backend
+        const design = await fetchNextDesign(response);
         if (!design) {
-            break; // Stop if the backend signals task completion or if there's an error
+            break;
         }
 
-        // Add trial to the timeline
         timeline.push({
-            type: "html-keyboard-response",
+            type: jsPsychHtmlKeyboardResponse,
             stimulus: `
                 <p>Option 1: $${design.r_ss} now</p>
                 <p>Option 2: $${design.r_ll} in ${design.t_ll} weeks</p>
-                <p>Press "F" for Option 1 or "J" for Option 2</p>
             `,
-            choices: ["f", "j"], // Keys for choices
+            choices: ["f", "j"],
             on_finish: (data) => {
-                response = data.key_press === "f" ? 0 : 1; // Update response for next trial
-                console.log("User response:", response); // Debugging
+                response = data.key_press === "f" ? 0 : 1;
             },
         });
     }
 
-    // End message
+    // End screen
     timeline.push({
-        type: "html-keyboard-response",
-        stimulus: "Thank you for participating! Press any key to finish.",
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "Thank you for participating!",
     });
 
-    // Initialize jsPsych
-    jsPsych.init({
-        display_element: "jspsych-target",
-        timeline: timeline,
-        on_finish: function () {
-            console.log("Experiment completed."); // Log experiment completion
-        },
-    });
+    // Run the experiment
+    jsPsych.run(timeline);
 }
-
-// Debugging: Call startExperiment manually to ensure the experiment runs
-// startExperiment();
