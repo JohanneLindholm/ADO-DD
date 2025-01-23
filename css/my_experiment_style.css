@@ -1,1 +1,100 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #1a1a1a;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.jspsych-content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.jspsych-content {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  max-width: 600px;
+  width: 80%;
+  margin: auto;
+}
+
+.jspsych-content h1,
+.jspsych-content p {
+  margin: 10px 0;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.choice-button {
+  display: inline-block;
+  padding: 15px 30px;
+  margin: 10px;
+  font-size: 16px;
+  background-color: #e0e0e0;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.choice-button.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.choice-button:hover {
+  background-color: #c0c0c0;
+}
+
+.nav-button {
+  display: block;
+  margin: 20px auto;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.nav-button.disabled {
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+}
+
+.nav-button:hover:not(.disabled) {
+  background-color: #b52a26;
+}
+
+/* Key CSS for horizontal layout */
+.jspsych-survey-multi-choice-option {
+  display: inline-flex; /* Ensures horizontal layout */
+  align-items: center; /* Aligns labels with radio buttons */
+  margin: 0 20px; /* Adds spacing between options */
+  justify-content: center;
+}
+
+.jspsych-survey-multi-choice-horizontal .jspsych-survey-multi-choice-question {
+  text-align: center; /* Centers question text */
+}
+
+/* Optional: Add spacing between the prompt and options */
+.jspsych-survey-multi-choice-prompt {
+  margin-bottom: 20px;
+}
+
+.jspsych-survey-multi-choice-option input[type="radio"] {
+  margin-right: 8px; /* Spacing between radio button and label */
+}
 
