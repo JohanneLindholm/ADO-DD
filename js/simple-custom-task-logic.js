@@ -1,8 +1,10 @@
 // Initialize jsPsych
 function initExp() {
+    console.log("Initializing jsPsych...");
+
     const jsPsych = initJsPsych({
         on_finish: () => {
-            // Save data as a CSV file locally
+            console.log("Experiment finished. Saving data...");
             jsPsych.data.get().localSave("csv", "delay_discounting_task.csv");
         },
     });
@@ -47,6 +49,7 @@ function initExp() {
             },
             on_finish: (data) => {
                 data.choice = data.response === "f" ? "smaller sooner" : "larger later";
+                console.log(`Trial data: ${JSON.stringify(data)}`);
             },
         });
     });
@@ -58,6 +61,6 @@ function initExp() {
         choices: "NO_KEYS",
     });
 
-    // Run the experiment
+    console.log("Starting jsPsych experiment...");
     jsPsych.run(timeline);
 }
